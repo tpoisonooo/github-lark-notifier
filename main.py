@@ -128,7 +128,7 @@ def work_time():
         return False
 
 @app.route('/github/lark',methods=['post'])
-def add_stu():
+def lark_robot():
     if request.data is None or len(request.data) == 0:
         return jsonify(dict(state="ok"))
 
@@ -157,7 +157,7 @@ def add_stu():
             if 'html_url' in issue:
                 url = issue['html_url']
 
-            text = "[新的 issue] 标题: {}, 链接 {}".format(title, url)
+            text = "[新的 issue] 标题: {}, 链接 {} \n".format(title, url)
 
     elif "pull_request" in jsonobj and "requested_reviewer" in jsonobj:
         type_ = "pull_request"
@@ -168,7 +168,7 @@ def add_stu():
         if 'login' in req:
             reviewer += req['login']
 
-        text = "请求 {} review PR, 链接 {}".format(reviewer, url)
+        text = "请求 {} review PR, 链接 {} \n".format(reviewer, url)
 
     print("=== Got type: {} | url: {} | action {}".format(type_, url, action))
 
@@ -176,19 +176,22 @@ def add_stu():
         return jsonify(dict(state="ok"))
 
     
-    webhook = "https://open.feishu.cn/open-apis/bot/v2/hook/7a5d3d98-fdfd-40f8-b8de-851cb7e81e5c"
+    # YOUR webhook
+    webhook = "${WEBHOOK}" 
     FILENAME = 'history.txt'
     if not work_time():
         print("=== Not worktime, add {} to history.txt".format(text))
         with open(FILENAME, 'a') as f:
-            f.write(text + '\n')
+            f.write(text)
 
         return jsonify(dict(state="ok"))
 
     if os.path.exists(FILENAME):
+        text += "\n 历史消息：\n"
         with open(FILENAME, 'r') as f:
             history = f.readlines()
-            text = "{}\n 历史消息 {}".format(text, history)
+            for item in history:
+                text += item
         os.remove(FILENAME)
             
     print("=== Send text: {}".format(text))
