@@ -11,7 +11,7 @@ github - 飞书自定义消息提醒
 2. `lark_webhook` 填入 `main.py` 的 `$WEB_HOOK` 中
 3. 执行 `python3 main.py`，监听 50000 端口
 4. 保证 ip+端口在公网能够访问，例如使用 `ngrok http 50000` 转发为 `robot_webhook`
-5. 打开 github settings, add webhook。把 `robot_webook` 填进去、消息类型选 `application/json`
+5. 打开 github settings, add webhook。把 `${robot_webook}/github/lark` 填进去、消息类型选 `application/json`
 
 # 致谢
 * 感谢某网上作者提供了 `LarkBot` class 源码，然而我已找不到出处
